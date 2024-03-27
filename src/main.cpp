@@ -1,5 +1,7 @@
 /// What the hell is this?
+///
 /// This is a poorly written Conway's Game of Life implementation in C++.
+///
 /// It uses SDL2 for rendering, but can be compiled without it.
 /// When compiled without SDL2, it will print the game of life grid to the console.
 /// The grid is a 2D array of integers, where 0 is dead and 1 is alive.
@@ -8,9 +10,11 @@
 /// The grid size is set to 10x10 by default if SDL2 is not available.
 ///
 /// Why is this poorly written?
-/// No comments, no error handling, no function decomposition, no separation of concerns, no encapsulation,
-/// no abstraction, no tests, no documentation, no coding standards, no design patterns, no best practices, no nothing.
-/// Just a single file with a single function that does everything.
+///
+/// No comments, poor error handling, no function decomposition, no separation of concerns, no encapsulation,
+/// no abstraction, no tests, no documentation, no design patterns, no best practices.
+/// What you have: global variables, magic numbers, hard-coded values, preprocessor directives, bad naming.
+/// Just a single file with a single function that does everything with global variables.
 ///
 /// Your job is to refactor this code to make it better.
 
@@ -51,7 +55,7 @@ int main(int argc, const char** argv) {
   system("cls");
   system("color 0F");
 #else
-  printf("\033[2J\033[1;1H");
+  system("clear");
 #endif
 #endif
   w = argc > 1 ? atoi(argv[1]) : (high_res ? 640 : 10);
@@ -93,7 +97,11 @@ int main(int argc, const char** argv) {
       printf("\n");
     }
     std::this_thread::sleep_for(40ms);
-    printf("\033[H");
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
 #endif
   }
 #ifdef WITH_SDL
