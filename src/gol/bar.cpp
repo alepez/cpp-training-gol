@@ -1,5 +1,5 @@
 #include "bar.hpp"
 
 int bar() {
-  return 17;
+    return 17;
 }
