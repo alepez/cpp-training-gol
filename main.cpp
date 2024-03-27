@@ -23,6 +23,10 @@
 #include <cstring>
 #include <thread>
 
+#include <bar.hpp>
+#include <cassert>
+#include <foo.hpp>
+
 using namespace std::chrono_literals;
 
 int grid[1'000'000], grid_tmp[1'000'000];
@@ -36,6 +40,10 @@ SDL_Event event;
 #define cell(g, x, y) g[((h + y) % h) * w + ((w + x) % w)]
 
 int main(int argc, const char** argv) {
+
+  assert(foo() == 42);
+  assert(bar() == 17);
+
 #ifdef WITH_SDL
   high_res = 1;
 #else
