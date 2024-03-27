@@ -17,7 +17,7 @@ target_link_libraries(game_of_life
         fmt::fmt
 )
 
-#find_package(SDL2)
+find_package(SDL2)
 
 if (NOT SDL2_FOUND)
     message(WARNING "SDL2 not found, disabling SDL2 support")

@@ -1,3 +1,19 @@
+/// What the hell is this?
+/// This is a poorly written Conway's Game of Life implementation in C++.
+/// It uses SDL2 for rendering, but can be compiled without it.
+/// When compiled without SDL2, it will print the game of life grid to the console.
+/// The grid is a 2D array of integers, where 0 is dead and 1 is alive.
+/// The grid is updated every 40ms.
+/// The grid size, seed, and scale can be set as command line arguments.
+/// The grid size is set to 10x10 by default if SDL2 is not available.
+///
+/// Why is this poorly written?
+/// No comments, no error handling, no function decomposition, no separation of concerns, no encapsulation,
+/// no abstraction, no tests, no documentation, no coding standards, no design patterns, no best practices, no nothing.
+/// Just a single file with a single function that does everything.
+///
+/// Your job is to refactor this code to make it better.
+
 #ifdef WITH_SDL
 #include <SDL2/SDL.h>
 #endif
@@ -30,8 +46,8 @@ int main(int argc, const char** argv) {
   printf("\033[2J\033[1;1H");
 #endif
 #endif
-  w = argc > 1 ? atoi(argv[1]) : (high_res ? 640 : 80);
-  h = argc > 2 ? atoi(argv[2]) : (high_res ? 480 : 25);
+  w = argc > 1 ? atoi(argv[1]) : (high_res ? 640 : 10);
+  h = argc > 2 ? atoi(argv[2]) : (high_res ? 480 : 10);
   seed = argc > 3 ? atoi(argv[3]) : 123;
   scale = argc > 4 ? atoi(argv[4]) : 1;
   srand(seed);
