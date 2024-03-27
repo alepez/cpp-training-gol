@@ -9,6 +9,15 @@ target_link_libraries(gol
         PUBLIC fmt::fmt
 )
 
+# Enable all warnings and treat them as errors, but only for the library
+target_compile_options(gol
+        PRIVATE -Wall
+        PRIVATE -Wpedantic
+        PRIVATE -Wextra
+        PRIVATE -Werror
+        PRIVATE -Wno-unused-parameter
+)
+
 add_executable(gol_test)
 
 target_include_directories(gol_test

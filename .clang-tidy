@@ -2,6 +2,8 @@
 Checks: >
   *,
   -altera-*,
+  -cppcoreguidelines-avoid-do-while,
+  -fuchsia-default-arguments-calls,
   -llvmlibc-*,
 
 WarningsAsErrors: ''
