@@ -18,14 +18,14 @@
 #include <SDL2/SDL.h>
 #endif
 
+#include <cassert>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <thread>
 
-#include <bar.hpp>
-#include <cassert>
-#include <foo.hpp>
+#include <gol/bar.hpp>
+#include <gol/foo.hpp>
 
 using namespace std::chrono_literals;
 

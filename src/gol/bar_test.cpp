@@ -2,7 +2,7 @@
 #include <catch2/matchers/catch_matchers_all.hpp>
 #include <fmt/format.h>
 
-#include <bar.hpp>
+#include <gol/bar.hpp>
 
 TEST_CASE("bar test example") {
   REQUIRE(bar() == 17);

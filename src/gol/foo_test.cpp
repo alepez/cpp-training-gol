@@ -2,7 +2,7 @@
 #include <catch2/matchers/catch_matchers_all.hpp>
 #include <fmt/format.h>
 
-#include <foo.hpp>
+#include <gol/foo.hpp>
 
 TEST_CASE("foo test example") {
   REQUIRE(foo() == 42);
