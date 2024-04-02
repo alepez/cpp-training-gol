@@ -1,8 +1,8 @@
 ﻿AccessModifierOffset: -2
 AlignAfterOpenBracket: BlockIndent
-AlignConsecutiveMacros: AcrossEmptyLines
-AlignConsecutiveAssignments: AcrossEmptyLines
-AlignConsecutiveDeclarations: AcrossEmptyLines
+AlignConsecutiveMacros: None
+AlignConsecutiveAssignments: None
+AlignConsecutiveDeclarations: None
 AlignEscapedNewlines: DontAlign
 AlignOperands: false
 AlignTrailingComments: false
