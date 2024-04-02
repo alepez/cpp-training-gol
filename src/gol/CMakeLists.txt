@@ -26,6 +26,7 @@ target_include_directories(gol_test
 
 target_link_libraries(gol_test
         PRIVATE Catch2::Catch2WithMain
+        PRIVATE ApprovalTests::ApprovalTests
         PRIVATE gol
 )
 
@@ -36,5 +37,4 @@ endfunction()
 
 add_module(foo)
 add_module(bar)
-
-
+add_module(gol)
