@@ -37,4 +37,8 @@ void Grid::update() {
     update_grid(data_.data(), tmp_data_.data(), w_, h_);
 }
 
+int& Grid::at(int x, int y) {
+    return data_[y * w_ + x];
+}
+
 }  // namespace gol

@@ -33,16 +33,14 @@
 #include "gol/gol.hpp"
 
 using namespace std::chrono_literals;
+using namespace gol;
 
-int grid[1'000'000], grid_tmp[1'000'000];
 int running = 1, w, h, seed, x, y, scale, adjacent_count, high_res = 0;
 
 #ifdef WITH_SDL
 SDL_Window* win;
 SDL_Event   event;
 #endif
-
-#define cell(g, x, y) g[((h + y) % h) * w + ((w + x) % w)]
 
 int main(int argc, const char** argv) {
     assert(foo() == 42);
@@ -63,10 +61,13 @@ int main(int argc, const char** argv) {
     seed  = argc > 3 ? atoi(argv[3]) : 123;
     scale = argc > 4 ? atoi(argv[4]) : 1;
     srand(seed);
+
+    Grid grid(w, h);
+
     if (seed != 0)
         for (x = 0; x < w; ++x)
             for (y = 0; y < h; ++y)
-                grid[((h + y) % h) * w + ((w + x) % w)] = rand() % 2;
+                grid.data()[((h + y) % h) * w + ((w + x) % w)] = rand() % 2;
 #ifdef WITH_SDL
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
         exit(-1);
@@ -82,13 +83,13 @@ int main(int argc, const char** argv) {
         exit(-1);
 #endif
     while (running) {
-        gol::update_grid(grid, grid_tmp, w, h);
+        grid.update();
 #ifdef WITH_SDL
         for (x = 0; x < SDL_GetWindowSurface(win)->w; ++x)
             for (y = 0; y < SDL_GetWindowSurface(win)->h; ++y)
                 ((int*)(SDL_GetWindowSurface(win)->pixels)
                 )[x + y * SDL_GetWindowSurface(win)->w] = 0x00FFFFFF
-                    * cell(grid,
+                    * grid.at(
                            x / (SDL_GetWindowSurface(win)->w / w),
                            y / (SDL_GetWindowSurface(win)->h / h));
         SDL_UpdateWindowSurface(win);

@@ -12,6 +12,8 @@ class Grid {
 
     void update();
 
+    int& at(int x, int y);
+
   private:
     int w_;
     int h_;
