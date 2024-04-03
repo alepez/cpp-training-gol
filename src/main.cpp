@@ -20,50 +20,49 @@
 
 #ifdef WITH_SDL
     #include <gol/bar.hpp>
+#else
+    #include <gol/foo.hpp>
 #endif
 
 #include <cstdlib>
-#include <gol/foo.hpp>
 
 #include "gol/gol.hpp"
 
 using namespace gol;
 
-int running = 1, w, h, seed, x, y, scale, adjacent_count, high_res = 0;
-
 int main(int argc, const char** argv) {
+    int running = 1;
+
+    int high_res = 0;
 #ifdef WITH_SDL
     high_res = 1;
-#else
-
 #endif
-    w = argc > 1 ? atoi(argv[1]) : (high_res ? 640 : 10);
-    h = argc > 2 ? atoi(argv[2]) : (high_res ? 480 : 10);
-    seed = argc > 3 ? atoi(argv[3]) : 123;
-    scale = argc > 4 ? atoi(argv[4]) : 1;
+
+    int w = argc > 1 ? atoi(argv[1]) : (high_res ? 640 : 10);
+    int h = argc > 2 ? atoi(argv[2]) : (high_res ? 480 : 10);
+    int seed = argc > 3 ? atoi(argv[3]) : 123;
+    int scale = argc > 4 ? atoi(argv[4]) : 1;
     srand(seed);
 
     Grid grid(w, h);
 
-    if (seed != 0)
-        for (x = 0; x < w; ++x)
-            for (y = 0; y < h; ++y)
+    if (seed != 0) {
+        for (int x = 0; x < w; ++x) {
+            for (int y = 0; y < h; ++y) {
                 grid.data()[((h + y) % h) * w + ((w + x) % w)] = rand() % 2;
+            }
+        }
+    }
+
 #ifdef WITH_SDL
     SdlCanvas canvas(w, h, scale);
 #else
     TerminalCanvas canvas(w, h, scale);
 #endif
+
     while (running) {
         grid.update();
-#ifdef WITH_SDL
         running = canvas.draw(grid);
-#else
-        running = canvas.draw(grid);
-#endif
     }
-#ifdef WITH_SDL
-
-#endif
     return 0;
 }
