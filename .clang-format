@@ -3,7 +3,7 @@ AlignAfterOpenBracket: BlockIndent
 AlignConsecutiveMacros: None
 AlignConsecutiveAssignments: None
 AlignConsecutiveDeclarations: None
-AlignEscapedNewlines: DontAlign
+AlignEscapedNewlines: Right
 AlignOperands: false
 AlignTrailingComments: false
 AllowAllArgumentsOnNextLine: false
@@ -28,10 +28,9 @@ BreakInheritanceList: AfterColon
 BreakStringLiterals: false
 ColumnLimit: 80
 CompactNamespaces: false
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
 ConstructorInitializerIndentWidth: 4
 ContinuationIndentWidth: 4
-Cpp11BracedListStyle: true
+Cpp11BracedListStyle: false
 DerivePointerAlignment: false
 FixNamespaceComments: true
 IncludeBlocks: Regroup

@@ -17,7 +17,7 @@ TEST_CASE("foo snapshot test example") {
 }
 
 TEST_CASE("foo snapshot test example, multiple inputs") {
-    vector<double> inputs = {4., 8., 15., 16., 23., 42.};
+    vector<double> inputs = { 4., 8., 15., 16., 23., 42. };
     vector<double> outputs;
     transform(
         inputs.begin(),
@@ -29,7 +29,7 @@ TEST_CASE("foo snapshot test example, multiple inputs") {
 }
 
 TEST_CASE("foo snapshot test example, converter") {
-    vector<double> inputs = {4., 8., 15., 16., 23., 42.};
+    vector<double> inputs = { 4., 8., 15., 16., 23., 42. };
     vector<double> outputs;
     transform(
         inputs.begin(),
@@ -44,4 +44,32 @@ TEST_CASE("foo snapshot test example, converter") {
         ++i;
     };
     Approvals::verifyAll("This is the header", outputs, converter);
+}
+
+std::string to_string(int* grid, int w, int h) {
+    std::string s;
+    s.reserve(w * h + h);
+    for (int y = 0; y < h; ++y) {
+        for (int x = 0; x < w; ++x) {
+            s += grid[y * w + x] ? 'X' : '.';
+        }
+        s += '\n';
+    }
+    return s;
+}
+
+TEST_CASE("gol grid update") {
+    static constexpr int w = 5;
+    static constexpr int h = 5;
+    static constexpr int area = w * h;
+    int grid[area] = {
+        0, 0, 0, 0, 0,  //
+        0, 0, 1, 0, 0,  //
+        0, 1, 1, 1, 0,  //
+        0, 0, 1, 0, 0,  //
+        0, 0, 0, 0, 0,  //
+    };
+    int grid_tmp[area];
+    gol::update_grid(grid, grid_tmp, w, h);
+    Approvals::verify(to_string(grid, w, h));
 }

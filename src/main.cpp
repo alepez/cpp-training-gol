@@ -30,6 +30,8 @@
 #include <gol/foo.hpp>
 #include <thread>
 
+#include "gol/gol.hpp"
+
 using namespace std::chrono_literals;
 
 int grid[1'000'000], grid_tmp[1'000'000];
@@ -80,17 +82,7 @@ int main(int argc, const char** argv) {
         exit(-1);
 #endif
     while (running) {
-        for (x = 0; x < w; ++x)
-            for (y = 0; y < h; ++y) {
-                adjacent_count = cell(grid, x - 1, y - 1)
-                    + cell(grid, x - 1, y + 0) + cell(grid, x - 1, y + 1)
-                    + cell(grid, x + 0, y - 1) + cell(grid, x + 0, y + 1)
-                    + cell(grid, x + 1, y - 1) + cell(grid, x + 1, y + 0)
-                    + cell(grid, x + 1, y + 1);
-                cell(grid_tmp, x, y) = (adjacent_count == 3)
-                    || ((adjacent_count == 2 && cell(grid, x, y)));
-            }
-        memcpy(grid, grid_tmp, sizeof(grid));
+        gol::update_grid(grid, grid_tmp, w, h);
 #ifdef WITH_SDL
         for (x = 0; x < SDL_GetWindowSurface(win)->w; ++x)
             for (y = 0; y < SDL_GetWindowSurface(win)->h; ++y)
