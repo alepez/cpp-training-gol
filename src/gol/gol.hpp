@@ -14,6 +14,9 @@ class Grid {
 
     int& at(int x, int y);
 
+    int width() const { return w_; }
+    int height() const { return h_; }
+
   private:
     int w_;
     int h_;

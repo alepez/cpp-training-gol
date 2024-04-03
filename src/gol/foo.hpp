@@ -1,3 +1,10 @@
 #pragma once
 
-int foo();
+namespace gol {
+
+class TerminalCanvas {
+  public:
+  private:
+};
+
+}  // namespace foo

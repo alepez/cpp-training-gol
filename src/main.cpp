@@ -19,33 +19,18 @@
 /// Your job is to refactor this code to make it better.
 
 #ifdef WITH_SDL
-    #include <SDL2/SDL.h>
+    #include <gol/bar.hpp>
 #endif
 
-#include <cassert>
-#include <cstdio>
 #include <cstdlib>
-#include <cstring>
-#include <gol/bar.hpp>
-#include <gol/foo.hpp>
-#include <thread>
 
 #include "gol/gol.hpp"
 
-using namespace std::chrono_literals;
 using namespace gol;
 
 int running = 1, w, h, seed, x, y, scale, adjacent_count, high_res = 0;
 
-#ifdef WITH_SDL
-SDL_Window* win;
-SDL_Event   event;
-#endif
-
 int main(int argc, const char** argv) {
-    assert(foo() == 42);
-    assert(bar() == 17);
-
 #ifdef WITH_SDL
     high_res = 1;
 #else
@@ -56,9 +41,9 @@ int main(int argc, const char** argv) {
     system("clear");
     #endif
 #endif
-    w     = argc > 1 ? atoi(argv[1]) : (high_res ? 640 : 10);
-    h     = argc > 2 ? atoi(argv[2]) : (high_res ? 480 : 10);
-    seed  = argc > 3 ? atoi(argv[3]) : 123;
+    w = argc > 1 ? atoi(argv[1]) : (high_res ? 640 : 10);
+    h = argc > 2 ? atoi(argv[2]) : (high_res ? 480 : 10);
+    seed = argc > 3 ? atoi(argv[3]) : 123;
     scale = argc > 4 ? atoi(argv[4]) : 1;
     srand(seed);
 
@@ -69,34 +54,12 @@ int main(int argc, const char** argv) {
             for (y = 0; y < h; ++y)
                 grid.data()[((h + y) % h) * w + ((w + x) % w)] = rand() % 2;
 #ifdef WITH_SDL
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
-        exit(-1);
-    win = SDL_CreateWindow(
-        "Conway's Game of Life",
-        0,
-        0,
-        scale * w,
-        scale * h,
-        4
-    );
-    if (!win)
-        exit(-1);
+    SdlCanvas canvas(w, h, scale);
 #endif
     while (running) {
         grid.update();
 #ifdef WITH_SDL
-        for (x = 0; x < SDL_GetWindowSurface(win)->w; ++x)
-            for (y = 0; y < SDL_GetWindowSurface(win)->h; ++y)
-                ((int*)(SDL_GetWindowSurface(win)->pixels)
-                )[x + y * SDL_GetWindowSurface(win)->w] = 0x00FFFFFF
-                    * grid.at(
-                           x / (SDL_GetWindowSurface(win)->w / w),
-                           y / (SDL_GetWindowSurface(win)->h / h));
-        SDL_UpdateWindowSurface(win);
-        while (SDL_PollEvent(&event))
-            if (event.type == SDL_QUIT)
-                running = false;
-        SDL_Delay(40);
+        running = canvas.draw(grid);
 #else
         for (y = 0; y < h; ++y) {
             for (x = 0; x < w; ++x)
@@ -112,8 +75,7 @@ int main(int argc, const char** argv) {
 #endif
     }
 #ifdef WITH_SDL
-    SDL_DestroyWindow(win);
-    SDL_Quit();
+
 #endif
     return 0;
 }
