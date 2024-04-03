@@ -23,4 +23,18 @@ void update_grid(int* grid, int* grid_tmp, int w, int h) {
     }
 }
 
+Grid::Grid(int w, int h) : w_(w), h_(h) {
+    int area = w * h;
+    data_.resize(area);
+    tmp_data_.resize(area);
+}
+
+int* Grid::data() {
+    return data_.data();
+}
+
+void Grid::update() {
+    update_grid(data_.data(), tmp_data_.data(), w_, h_);
+}
+
 }  // namespace gol

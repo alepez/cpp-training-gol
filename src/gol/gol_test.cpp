@@ -11,6 +11,8 @@ using std::to_string;
 using std::transform;
 using std::vector;
 
+using namespace gol;
+
 std::string to_string(int* grid, int w, int h) {
     std::string s;
     s.reserve(w * h + h);
@@ -27,14 +29,17 @@ TEST_CASE("gol grid update") {
     static constexpr int w = 5;
     static constexpr int h = 5;
     static constexpr int area = w * h;
-    int grid[area] = {
+    int state[area] = {
         0, 0, 0, 0, 0,  //
         0, 0, 1, 0, 0,  //
         0, 1, 1, 1, 0,  //
         0, 0, 1, 0, 0,  //
         0, 0, 0, 0, 0,  //
     };
-    int grid_tmp[area];
-    gol::update_grid(grid, grid_tmp, w, h);
-    Approvals::verify(to_string(grid, w, h));
+
+    Grid grid(w, h);
+    std::copy(&state[0], &state[area], grid.data());
+    grid.update();
+
+    Approvals::verify(to_string(grid.data(), w, h));
 }
