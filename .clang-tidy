@@ -4,6 +4,7 @@ Checks: >
   -altera-*,
   -cppcoreguidelines-avoid-do-while,
   -fuchsia-default-arguments-calls,
+  -modernize-use-trailing-return-type,
   -llvmlibc-*,
 
 WarningsAsErrors: ''
@@ -15,7 +16,7 @@ CheckOptions:
   - { key: readability-identifier-naming.ClassCase,               value: CamelCase  }
   - { key: readability-identifier-naming.ConstexprVariableCase,   value: lower_case }
   - { key: readability-identifier-naming.EnumConstantCase,        value: CamelCase }
-  - { key: readability-identifier-naming.FunctionCase,            value: CamelCase  }
+  - { key: readability-identifier-naming.FunctionCase,            value: lower_case  }
   - { key: readability-identifier-naming.GlobalConstantCase,      value: UPPER_CASE }
   - { key: readability-identifier-naming.GlobalConstantPrefix,    value: GLOBAL_ }
   - { key: readability-identifier-naming.MacroDefinitionCase,     value: UPPER_CASE }
