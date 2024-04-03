@@ -38,8 +38,10 @@ TEST_CASE("gol grid update") {
     };
 
     Grid grid(w, h);
+
+    Game game;
     std::copy(&state[0], &state[area], grid.data());
-    grid.update();
+    game.update(grid);
 
     Approvals::verify(to_string(grid.data(), w, h));
 }

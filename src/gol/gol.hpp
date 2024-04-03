@@ -10,18 +10,25 @@ class Grid {
 
     int* data();
 
-    void update();
-
     int& at(int x, int y);
 
-    int width() const { return w_; }
-    int height() const { return h_; }
+    int width() const {
+        return w_;
+    }
+
+    int height() const {
+        return h_;
+    }
 
   private:
     int w_;
     int h_;
     std::vector<int> data_;
-    std::vector<int> tmp_data_;
+};
+
+class Game {
+  public:
+    void update(Grid& grid);
 };
 
 }  // namespace gol

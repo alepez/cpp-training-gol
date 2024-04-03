@@ -45,6 +45,7 @@ int main(int argc, const char** argv) {
     srand(seed);
 
     Grid grid(w, h);
+    Game game;
 
     if (seed != 0) {
         for (int x = 0; x < w; ++x) {
@@ -61,7 +62,7 @@ int main(int argc, const char** argv) {
 #endif
 
     while (running) {
-        grid.update();
+        game.update(grid);
         running = canvas.draw(grid);
     }
     return 0;
