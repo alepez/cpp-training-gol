@@ -23,6 +23,7 @@
 #endif
 
 #include <cstdlib>
+#include <gol/foo.hpp>
 
 #include "gol/gol.hpp"
 
@@ -34,12 +35,7 @@ int main(int argc, const char** argv) {
 #ifdef WITH_SDL
     high_res = 1;
 #else
-    #ifdef _WIN32
-    system("cls");
-    system("color 0F");
-    #else
-    system("clear");
-    #endif
+
 #endif
     w = argc > 1 ? atoi(argv[1]) : (high_res ? 640 : 10);
     h = argc > 2 ? atoi(argv[2]) : (high_res ? 480 : 10);
@@ -55,23 +51,15 @@ int main(int argc, const char** argv) {
                 grid.data()[((h + y) % h) * w + ((w + x) % w)] = rand() % 2;
 #ifdef WITH_SDL
     SdlCanvas canvas(w, h, scale);
+#else
+    TerminalCanvas canvas(w, h, scale);
 #endif
     while (running) {
         grid.update();
 #ifdef WITH_SDL
         running = canvas.draw(grid);
 #else
-        for (y = 0; y < h; ++y) {
-            for (x = 0; x < w; ++x)
-                printf(cell(grid, x, y) ? "X" : " ");
-            printf("\n");
-        }
-        std::this_thread::sleep_for(40ms);
-    #ifdef _WIN32
-        system("cls");
-    #else
-        system("clear");
-    #endif
+        running = canvas.draw(grid);
 #endif
     }
 #ifdef WITH_SDL
