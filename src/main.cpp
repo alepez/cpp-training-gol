@@ -34,24 +34,22 @@
 using namespace std::chrono_literals;
 using namespace gol;
 
-int grid[1'000'000], grid_tmp[1'000'000];
-int running = 1, x, y;
-
 #ifdef WITH_SDL
 SDL_Window* win;
 SDL_Event event;
+bool sdl_should_run = true;
 #endif
 
 void canvas_sdl_init(int w, int h, int scale);
-void canvas_sdl_draw(int w, int h);
+void canvas_sdl_draw(int* grid, int w, int h);
+bool canvas_sdl_should_run();
 void canvas_sdl_teardown();
 
 void canvas_terminal_init();
-void canvas_terminal_draw(int w, int h);
+void canvas_terminal_draw(int* grid, int w, int h);
 
 int main(int argc, const char** argv) {
-    assert(foo() == 42);
-    assert(bar() == 17);
+    int grid[1'000'000], grid_tmp[1'000'000];
 
     Input input = parse_input(argc, argv);
     auto [w, h, seed, scale, canvas_type, repeat] = input;
@@ -64,11 +62,12 @@ int main(int argc, const char** argv) {
 
     srand(seed);
     if (seed != 0)
-        for (x = 0; x < w; ++x)
-            for (y = 0; y < h; ++y)
+        for (int x = 0; x < w; ++x)
+            for (int y = 0; y < h; ++y)
                 grid[((h + y) % h) * w + ((w + x) % w)] = rand() % 2;
 
     int counter = 0;
+    bool running = true;
 
     while (running) {
         if (repeat > 0) {
@@ -81,9 +80,13 @@ int main(int argc, const char** argv) {
         update_grid(grid, grid_tmp, w, h);
 
         if (canvas_type == 1) {
-            canvas_sdl_draw(w, h);
+            canvas_sdl_draw(grid, w, h);
         } else {
-            canvas_terminal_draw(w, h);
+            canvas_terminal_draw(grid, w, h);
+        }
+
+        if (canvas_type == 1) {
+            running = canvas_sdl_should_run();
         }
     }
 
@@ -101,9 +104,9 @@ void canvas_sdl_teardown() {
 #endif
 }
 
-void canvas_terminal_draw(int w, int h) {
-    for (y = 0; y < h; ++y) {
-        for (x = 0; x < w; ++x)
+void canvas_terminal_draw(int* grid, int w, int h) {
+    for (int y = 0; y < h; ++y) {
+        for (int x = 0; x < w; ++x)
             printf(cell(grid, x, y) ? "X" : " ");
         printf("\n");
     }
@@ -115,10 +118,10 @@ void canvas_terminal_draw(int w, int h) {
 #endif
 }
 
-void canvas_sdl_draw(int w, int h) {
+void canvas_sdl_draw(int* grid, int w, int h) {
 #ifdef WITH_SDL
-    for (x = 0; x < SDL_GetWindowSurface(win)->w; ++x)
-        for (y = 0; y < SDL_GetWindowSurface(win)->h; ++y)
+    for (int x = 0; x < SDL_GetWindowSurface(win)->w; ++x)
+        for (int y = 0; y < SDL_GetWindowSurface(win)->h; ++y)
             ((int*)(SDL_GetWindowSurface(win)->pixels)
             )[x + y * SDL_GetWindowSurface(win)->w] = 0x00FFFFFF
                 * cell(grid,
@@ -127,7 +130,7 @@ void canvas_sdl_draw(int w, int h) {
     SDL_UpdateWindowSurface(win);
     while (SDL_PollEvent(&event))
         if (event.type == SDL_QUIT)
-            running = false;
+            sdl_should_run = false;
     SDL_Delay(40);
 #endif
 }
@@ -156,4 +159,8 @@ void canvas_terminal_init() {
 #else
     system("clear");
 #endif
+}
+
+bool canvas_sdl_should_run() {
+    return sdl_should_run;
 }
