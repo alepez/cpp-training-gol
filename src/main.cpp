@@ -42,6 +42,10 @@ SDL_Window* win;
 SDL_Event event;
 #endif
 
+void terminal_canvas_init();
+
+void canvas_sdl_init(int w, int h, int scale);
+
 int main(int argc, const char** argv) {
     assert(foo() == 42);
     assert(bar() == 17);
@@ -49,13 +53,10 @@ int main(int argc, const char** argv) {
     Input input = parse_input(argc, argv);
     auto [w, h, seed, scale, canvas_type, repeat] = input;
 
-    if (canvas_type == 0) {
-#ifdef _WIN32
-        system("cls");
-        system("color 0F");
-#else
-        system("clear");
-#endif
+    if (canvas_type == 1) {
+        canvas_sdl_init(w, h, scale);
+    } else {
+        terminal_canvas_init();
     }
 
     srand(seed);
@@ -63,22 +64,7 @@ int main(int argc, const char** argv) {
         for (x = 0; x < w; ++x)
             for (y = 0; y < h; ++y)
                 grid[((h + y) % h) * w + ((w + x) % w)] = rand() % 2;
-    if (canvas_type == 1) {
-#ifdef WITH_SDL
-        if (SDL_Init(SDL_INIT_VIDEO) != 0)
-            exit(-1);
-        win = SDL_CreateWindow(
-            "Conway's Game of Life",
-            0,
-            0,
-            scale * w,
-            scale * h,
-            4
-        );
-        if (!win)
-            exit(-1);
-#endif
-    }
+
     int counter = 0;
 
     while (running) {
@@ -127,4 +113,30 @@ int main(int argc, const char** argv) {
 #endif
     }
     return 0;
+}
+
+void canvas_sdl_init(int w, int h, int scale) {
+#ifdef WITH_SDL
+    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+        exit(-1);
+    win = SDL_CreateWindow(
+        "Conway's Game of Life",
+        0,
+        0,
+        scale * w,
+        scale * h,
+        4
+    );
+    if (!win)
+        exit(-1);
+#endif
+}
+
+void terminal_canvas_init() {
+#ifdef _WIN32
+    system("cls");
+    system("color 0F");
+#else
+    system("clear");
+#endif
 }
