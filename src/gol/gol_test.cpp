@@ -38,3 +38,19 @@ TEST_CASE("update_grid 3x3") {
 
     Approvals::verify(to_string(grid, 3, 3));
 }
+
+TEST_CASE("update_grid 3x3, 3 iterations") {
+    int grid[9] = {
+        0, 0, 0,  //
+        0, 1, 0,  //
+        0, 0, 0,  //
+    };
+
+    int grid_tmp[9];
+
+    for (int i = 0; i < 3; ++i) {
+        gol::update_grid(grid, grid_tmp, 3, 3);
+    }
+
+    Approvals::verify(to_string(grid, 3, 3));
+}
