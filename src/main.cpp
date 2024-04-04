@@ -42,9 +42,12 @@ SDL_Window* win;
 SDL_Event event;
 #endif
 
-void terminal_canvas_init();
-
 void canvas_sdl_init(int w, int h, int scale);
+void canvas_sdl_draw(int w, int h);
+void canvas_sdl_teardown();
+
+void canvas_terminal_init();
+void canvas_terminal_draw(int w, int h);
 
 int main(int argc, const char** argv) {
     assert(foo() == 42);
@@ -56,7 +59,7 @@ int main(int argc, const char** argv) {
     if (canvas_type == 1) {
         canvas_sdl_init(w, h, scale);
     } else {
-        terminal_canvas_init();
+        canvas_terminal_init();
     }
 
     srand(seed);
@@ -78,41 +81,55 @@ int main(int argc, const char** argv) {
         update_grid(grid, grid_tmp, w, h);
 
         if (canvas_type == 1) {
-#ifdef WITH_SDL
-            for (x = 0; x < SDL_GetWindowSurface(win)->w; ++x)
-                for (y = 0; y < SDL_GetWindowSurface(win)->h; ++y)
-                    ((int*)(SDL_GetWindowSurface(win)->pixels)
-                    )[x + y * SDL_GetWindowSurface(win)->w] = 0x00FFFFFF
-                        * cell(grid,
-                               x / (SDL_GetWindowSurface(win)->w / w),
-                               y / (SDL_GetWindowSurface(win)->h / h));
-            SDL_UpdateWindowSurface(win);
-            while (SDL_PollEvent(&event))
-                if (event.type == SDL_QUIT)
-                    running = false;
-            SDL_Delay(40);
-#endif
+            canvas_sdl_draw(w, h);
         } else {
-            for (y = 0; y < h; ++y) {
-                for (x = 0; x < w; ++x)
-                    printf(cell(grid, x, y) ? "X" : " ");
-                printf("\n");
-            }
-            std::this_thread::sleep_for(40ms);
-#ifdef _WIN32
-            system("cls");
-#else
-            system("clear");
-#endif
+            canvas_terminal_draw(w, h);
         }
     }
+
     if (canvas_type == 1) {
-#ifdef WITH_SDL
-        SDL_DestroyWindow(win);
-        SDL_Quit();
-#endif
+        canvas_sdl_teardown();
     }
+
     return 0;
+}
+
+void canvas_sdl_teardown() {
+#ifdef WITH_SDL
+    SDL_DestroyWindow(win);
+    SDL_Quit();
+#endif
+}
+
+void canvas_terminal_draw(int w, int h) {
+    for (y = 0; y < h; ++y) {
+        for (x = 0; x < w; ++x)
+            printf(cell(grid, x, y) ? "X" : " ");
+        printf("\n");
+    }
+    std::this_thread::sleep_for(40ms);
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
+void canvas_sdl_draw(int w, int h) {
+#ifdef WITH_SDL
+    for (x = 0; x < SDL_GetWindowSurface(win)->w; ++x)
+        for (y = 0; y < SDL_GetWindowSurface(win)->h; ++y)
+            ((int*)(SDL_GetWindowSurface(win)->pixels)
+            )[x + y * SDL_GetWindowSurface(win)->w] = 0x00FFFFFF
+                * cell(grid,
+                       x / (SDL_GetWindowSurface(win)->w / w),
+                       y / (SDL_GetWindowSurface(win)->h / h));
+    SDL_UpdateWindowSurface(win);
+    while (SDL_PollEvent(&event))
+        if (event.type == SDL_QUIT)
+            running = false;
+    SDL_Delay(40);
+#endif
 }
 
 void canvas_sdl_init(int w, int h, int scale) {
@@ -132,7 +149,7 @@ void canvas_sdl_init(int w, int h, int scale) {
 #endif
 }
 
-void terminal_canvas_init() {
+void canvas_terminal_init() {
 #ifdef _WIN32
     system("cls");
     system("color 0F");
