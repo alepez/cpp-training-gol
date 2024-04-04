@@ -42,6 +42,19 @@ SDL_Event event;
 
 #define cell(g, x, y) g[((h + y) % h) * w + ((w + x) % w)]
 
+void update_grid(int* grid, int* grid_tmp, int w, int h) {
+    for (x = 0; x < w; ++x)
+        for (y = 0; y < h; ++y) {
+            adjacent_count = cell(grid, x - 1, y - 1) + cell(grid, x - 1, y + 0)
+                + cell(grid, x - 1, y + 1) + cell(grid, x + 0, y - 1)
+                + cell(grid, x + 0, y + 1) + cell(grid, x + 1, y - 1)
+                + cell(grid, x + 1, y + 0) + cell(grid, x + 1, y + 1);
+            cell(grid_tmp, x, y) = (adjacent_count == 3)
+                || ((adjacent_count == 2 && cell(grid, x, y)));
+        }
+    std::copy(grid_tmp, grid_tmp + w * h, grid);
+}
+
 int main(int argc, const char** argv) {
     assert(foo() == 42);
     assert(bar() == 17);
@@ -94,17 +107,8 @@ int main(int argc, const char** argv) {
             }
         }
 
-        for (x = 0; x < w; ++x)
-            for (y = 0; y < h; ++y) {
-                adjacent_count = cell(grid, x - 1, y - 1)
-                    + cell(grid, x - 1, y + 0) + cell(grid, x - 1, y + 1)
-                    + cell(grid, x + 0, y - 1) + cell(grid, x + 0, y + 1)
-                    + cell(grid, x + 1, y - 1) + cell(grid, x + 1, y + 0)
-                    + cell(grid, x + 1, y + 1);
-                cell(grid_tmp, x, y) = (adjacent_count == 3)
-                    || ((adjacent_count == 2 && cell(grid, x, y)));
-            }
-        memcpy(grid, grid_tmp, sizeof(grid));
+        update_grid(grid, grid_tmp, w, h);
+
         if (canvas_type == 1) {
 #ifdef WITH_SDL
             for (x = 0; x < SDL_GetWindowSurface(win)->w; ++x)
