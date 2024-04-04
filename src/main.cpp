@@ -35,24 +35,39 @@ using namespace std::chrono_literals;
 using namespace gol;
 
 int grid[1'000'000], grid_tmp[1'000'000];
-int running = 1, w, h, seed, x, y, scale, adjacent_count, high_res = 0;
+int running = 1, x, y;
 
 #ifdef WITH_SDL
 SDL_Window* win;
 SDL_Event event;
 #endif
 
+struct Input {
+    int w { 10 };
+    int h { 10 };
+    int seed { 123 };
+    int scale { 1 };
+    int canvas_type { 0 };
+    int repeat { -1 };
+};
+
+Input parse_input(int argc, const char** argv) {
+    Input input;
+    input.w = argc > 1 ? atoi(argv[1]) : 10;
+    input.h = argc > 2 ? atoi(argv[2]) : 10;
+    input.seed = argc > 3 ? atoi(argv[3]) : 123;
+    input.scale = argc > 4 ? atoi(argv[4]) : 1;
+    input.canvas_type = argc > 5 ? atoi(argv[5]) : 0;
+    input.repeat = argc > 6 ? atoi(argv[6]) : -1;
+    return input;
+}
+
 int main(int argc, const char** argv) {
     assert(foo() == 42);
     assert(bar() == 17);
 
-    w = argc > 1 ? atoi(argv[1]) : 10;
-    h = argc > 2 ? atoi(argv[2]) : 10;
-    seed = argc > 3 ? atoi(argv[3]) : 123;
-    scale = argc > 4 ? atoi(argv[4]) : 1;
-
-    int canvas_type = argc > 5 ? atoi(argv[5]) : 0;
-    int repeat = argc > 6 ? atoi(argv[6]) : -1;
+    Input input = parse_input(argc, argv);
+    auto [w, h, seed, scale, canvas_type, repeat] = input;
 
     if (canvas_type == 0) {
 #ifdef _WIN32
