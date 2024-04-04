@@ -10,6 +10,7 @@ using std::string;
 using std::to_string;
 using std::transform;
 using std::vector;
+using namespace gol;
 
 //void update_grid(int* grid, int* grid_tmp, int w, int h);
 
@@ -126,4 +127,34 @@ TEST_CASE("update_grid 30x30") {
     gol::update_grid(grid, grid_tmp, 30, 30);
 
     Approvals::verify(to_string(grid, 30, 30));
+}
+
+TEST_CASE("cli argument parse, default") {
+    const char* argv[] = {
+        "gol",
+    };
+    auto input = parse_input(1, argv);
+
+    Input default_input;
+    REQUIRE(input.w == default_input.w);
+    REQUIRE(input.h == default_input.h);
+    REQUIRE(input.seed == default_input.seed);
+    REQUIRE(input.scale == default_input.scale);
+    REQUIRE(input.canvas_type == default_input.canvas_type);
+    REQUIRE(input.repeat == default_input.repeat);
+}
+
+TEST_CASE("cli argument parse, all arguments") {
+    const char* argv[] = {
+        "gol", "10", "20", "30", "40", "50", "60",
+    };
+
+    auto input = parse_input(7, argv);
+
+    REQUIRE(input.w == 10);
+    REQUIRE(input.h == 20);
+    REQUIRE(input.seed == 30);
+    REQUIRE(input.scale == 40);
+    REQUIRE(input.canvas_type == 50);
+    REQUIRE(input.repeat == 60);
 }
