@@ -68,6 +68,7 @@ int main(int argc, const char** argv) {
             for (y = 0; y < h; ++y)
                 grid[((h + y) % h) * w + ((w + x) % w)] = rand() % 2;
     if (canvas_type == 1) {
+#ifdef WITH_SDL
         if (SDL_Init(SDL_INIT_VIDEO) != 0)
             exit(-1);
         win = SDL_CreateWindow(
@@ -80,6 +81,7 @@ int main(int argc, const char** argv) {
         );
         if (!win)
             exit(-1);
+#endif
     }
     while (running) {
         for (x = 0; x < w; ++x)
@@ -94,6 +96,7 @@ int main(int argc, const char** argv) {
             }
         memcpy(grid, grid_tmp, sizeof(grid));
         if (canvas_type == 1) {
+#ifdef WITH_SDL
             for (x = 0; x < SDL_GetWindowSurface(win)->w; ++x)
                 for (y = 0; y < SDL_GetWindowSurface(win)->h; ++y)
                     ((int*)(SDL_GetWindowSurface(win)->pixels)
@@ -106,6 +109,7 @@ int main(int argc, const char** argv) {
                 if (event.type == SDL_QUIT)
                     running = false;
             SDL_Delay(40);
+#endif
         } else {
             for (y = 0; y < h; ++y) {
                 for (x = 0; x < w; ++x)
@@ -121,8 +125,10 @@ int main(int argc, const char** argv) {
         }
     }
     if (canvas_type == 1) {
+#ifdef WITH_SDL
         SDL_DestroyWindow(win);
         SDL_Quit();
+#endif
     }
     return 0;
 }
