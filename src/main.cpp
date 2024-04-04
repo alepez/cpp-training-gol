@@ -52,6 +52,7 @@ int main(int argc, const char** argv) {
     scale = argc > 4 ? atoi(argv[4]) : 1;
 
     int canvas_type = argc > 5 ? atoi(argv[5]) : 0;
+    int repeat = argc > 6 ? atoi(argv[6]) : -1;
 
     if (canvas_type == 0) {
 #ifdef _WIN32
@@ -83,7 +84,16 @@ int main(int argc, const char** argv) {
             exit(-1);
 #endif
     }
+    int counter = 0;
+
     while (running) {
+        if (repeat > 0) {
+            counter += 1;
+            if (counter >= repeat) {
+                break;
+            }
+        }
+
         for (x = 0; x < w; ++x)
             for (y = 0; y < h; ++y) {
                 adjacent_count = cell(grid, x - 1, y - 1)
