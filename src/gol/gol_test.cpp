@@ -5,7 +5,6 @@
 #include <string>
 
 using ApprovalTests::Approvals;
-using gol::something_really_obscure;
 using std::back_inserter;
 using std::string;
 using std::to_string;

@@ -28,9 +28,11 @@
 #include <cstring>
 #include <gol/bar.hpp>
 #include <gol/foo.hpp>
+#include <gol/gol.hpp>
 #include <thread>
 
 using namespace std::chrono_literals;
+using namespace gol;
 
 int grid[1'000'000], grid_tmp[1'000'000];
 int running = 1, w, h, seed, x, y, scale, adjacent_count, high_res = 0;
@@ -39,21 +41,6 @@ int running = 1, w, h, seed, x, y, scale, adjacent_count, high_res = 0;
 SDL_Window* win;
 SDL_Event event;
 #endif
-
-#define cell(g, x, y) g[((h + y) % h) * w + ((w + x) % w)]
-
-void update_grid(int* grid, int* grid_tmp, int w, int h) {
-    for (x = 0; x < w; ++x)
-        for (y = 0; y < h; ++y) {
-            adjacent_count = cell(grid, x - 1, y - 1) + cell(grid, x - 1, y + 0)
-                + cell(grid, x - 1, y + 1) + cell(grid, x + 0, y - 1)
-                + cell(grid, x + 0, y + 1) + cell(grid, x + 1, y - 1)
-                + cell(grid, x + 1, y + 0) + cell(grid, x + 1, y + 1);
-            cell(grid_tmp, x, y) = (adjacent_count == 3)
-                || ((adjacent_count == 2 && cell(grid, x, y)));
-        }
-    std::copy(grid_tmp, grid_tmp + w * h, grid);
-}
 
 int main(int argc, const char** argv) {
     assert(foo() == 42);
