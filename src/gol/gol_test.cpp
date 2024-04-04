@@ -54,3 +54,33 @@ TEST_CASE("update_grid 3x3, 3 iterations") {
 
     Approvals::verify(to_string(grid, 3, 3));
 }
+
+TEST_CASE("update_grid 3x3, lines of three") {
+    int grid[9] = {
+        0, 0, 0,  //
+        1, 1, 1,  //
+        0, 0, 0,  //
+    };
+
+    int grid_tmp[9];
+
+    gol::update_grid(grid, grid_tmp, 3, 3);
+
+    Approvals::verify(to_string(grid, 3, 3));
+}
+
+TEST_CASE("update_grid 5x5, lines of three") {
+    int grid[25] = {
+        0, 0, 0, 0, 0,  //
+        0, 0, 0, 0, 0,  //
+        0, 1, 1, 1, 0,  //
+        0, 0, 0, 0, 0,  //
+        0, 0, 0, 0, 0,  //
+    };
+
+    int grid_tmp[25];
+
+    gol::update_grid(grid, grid_tmp, 5, 5);
+
+    Approvals::verify(to_string(grid, 5, 5));
+}
